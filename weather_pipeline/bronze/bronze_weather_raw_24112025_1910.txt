@@ -1,0 +1,45 @@
+{
+    "coord": {
+        "lon": 34.8874,
+        "lat": 32.0883
+    },
+    "weather": [
+        {
+            "id": 803,
+            "main": "Clouds",
+            "description": "broken clouds",
+            "icon": "04n"
+        }
+    ],
+    "base": "stations",
+    "main": {
+        "temp": 296.01,
+        "feels_like": 296.31,
+        "temp_min": 294.69,
+        "temp_max": 296.06,
+        "pressure": 1015,
+        "humidity": 75,
+        "sea_level": 1015,
+        "grnd_level": 1012
+    },
+    "visibility": 8000,
+    "wind": {
+        "speed": 3.6,
+        "deg": 180
+    },
+    "clouds": {
+        "all": 64
+    },
+    "dt": 1764003625,
+    "sys": {
+        "type": 1,
+        "id": 6845,
+        "country": "IL",
+        "sunrise": 1763957846,
+        "sunset": 1763995032
+    },
+    "timezone": 7200,
+    "id": 6693674,
+    "name": "Petah Tikva",
+    "cod": 200
+}
