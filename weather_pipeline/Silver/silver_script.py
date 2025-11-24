@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 from datetime import datetime
+import numpy as np
 
 
 bronze_path = os.path.join(os.path.dirname(__file__), "..", "bronze")
@@ -153,3 +154,61 @@ month = datetime.now().month
 year = datetime.now().year
 
 df.to_csv(f"SilverCSV_{day}{month}{year}_{hour}{minute}.csv", sep="\t", encoding='utf-8')
+
+# Adding a new "Temperature Range" column
+df["Temperature Range"] = df["Maximum Temperature"] - df["Minimum Temperature"]
+print(df["Temperature Range"])
+
+# Adding a new "Day Length" column:
+df["Day Length"] = df["Sunset Time"] - df["Sunrise Time"]
+print(df["Day Length"])
+
+
+# Adding a new Daytime / Nightime radio column:
+df["Is Daytime"] = (df["Time of Data"] >= df["Sunrise Time"]) & (df["Time of Data"] < df["Sunset Time"])
+
+
+# Adding a new "Weather Category" column
+# df["Weather Category"] = np.where(
+#     df["Weather Main"] == "Clear", "Clear",
+#         np.where(df["Weather Main"] == "Clouds", "Cloudy",
+#             np.where(df["Weather Main"] == "Rain", "Rain",
+#                 np.where(df["Weather Main"] == "Drizzle", "Rain",
+#                     np.where(df["Weather Main"] == "Thunderstorm", "Storm",
+#                         np.where(df["Weather Main"] == "Snow", "Snow",
+#                             np.where(df["Weather Main"] == "Mist", "Low Visibility",
+#                                 np.where(df["Weather Main"] == "Fog", "Low Visibility",
+#                                     np.where(df["Weather Main"] == "Haze", "Low Visibility", "Other")
+#                                 )
+#                             )
+#                         )
+#                     )
+#                 )
+#             )
+#         )
+# )
+
+# Adding a new "Weather Category" column
+weather_map = {
+    "Clear": "Clear",
+    "Clouds": "Cloudy",
+    "Rain": "Rain",
+    "Drizzle": "Rain",
+    "Thunderstorm": "Storm",
+    "Snow": "Snow",
+    "Mist": "Low Visibility",
+    "Fog": "Low Visibility",
+    "Haze": "Low Visibility",
+}
+df["Weather Category"] = df["Weather Main"].map(weather_map).fillna("Other")
+
+#⭐ 6️⃣ Visibility in km
+
+# Adding a new "Celcius to Fahrenheit" column:
+def to_fahrenheit(celcius_temp):
+    return (celcius_temp * 9 / 5) + 32
+
+df["Temperature in Fahrenheit"] = df["Temperature"].apply(to_fahrenheit)
+
+# Adding a new "visiblity in km" column:
+df["Visibility in KM"] = df["Visibility"] / 1000
