@@ -6,7 +6,7 @@ Fetches weather data from OpenWeatherMap API and stores in Bronze layer
 import os
 import json
 import yaml
-from datetime import datetime
+from datetime import datetime, UTC
 from pathlib import Path
 from typing import List, Dict
 import logging
@@ -42,7 +42,7 @@ def save_to_bronze(data: Dict, location: str, bronze_path: str) -> None:
     bronze_dir.mkdir(parents=True, exist_ok=True)
     
     # Create filename with timestamp
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     filename = f"weather_{location}_{timestamp}.json"
     filepath = bronze_dir / filename
     
@@ -61,11 +61,11 @@ def ingest_weather_data() -> None:
     # Load configuration
     config = load_config()
     
-    # Get API key from environment variable
-    api_key = os.getenv('OPENWEATHER_API_KEY', config['api']['api_key'])
+    # Get API key from environment variable (prioritize .env file)
+    api_key = os.getenv('OPENWEATHER_API_KEY')
     
-    if api_key == "YOUR_API_KEY_HERE" or not api_key:
-        logger.error("Please set OPENWEATHER_API_KEY in .env file or config.yaml")
+    if not api_key or api_key == "your_api_key_here":
+        logger.error("Please set OPENWEATHER_API_KEY in .env file")
         return
     
     # Initialize API client
